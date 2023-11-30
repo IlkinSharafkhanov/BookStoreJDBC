@@ -6,6 +6,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDataManager {
 
@@ -69,7 +71,6 @@ public class OrderDataManager {
     }
 
 
-
     // Helper method to check if a customer with the specified CustomerID exists
     static boolean isCustomerExists(Connection connection, int customerID) throws SQLException {
         String checkCustomerQuery = "SELECT 1 FROM Customers WHERE CustomerID = ?";
@@ -97,6 +98,8 @@ public class OrderDataManager {
             return false;
         }
     }
+
+
 
     // Helper method to handle SQLException
     static void handleSQLException(SQLException e) {

@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -23,42 +25,149 @@ public class Main {
             CustomerDataManager customerManager = new CustomerDataManager();
             OrderDataManager orderManager = new OrderDataManager();
 
-            // Create instances of Author, Book, Customer, and Order classes
-//            Author author1 = new Author(1, "John Doe");
-//            Author author2 = new Author(2, "Dan Brown");
-//            Author author3 = new Author(3, "Jules Verne");
-//            Author author4 = new Author(4, "Arthur Konan Doyl");
-//            Book book1 = new Book(2, "Angels And Demons", 1, 10);
-//            Book book2 = new Book(3, "80 Days Around the World", 3, 17);
-//            Book book3 = new Book(4, "Scherlock Holmes", 4, 20);
-//            Customer newCustomer = new Customer(2, "Sebastian Vettel", "vettel5@example.com");
-//            Customer anotherNewCustomer = new Customer(3, "Daniel Ricciardo", "danni3@example.com");
-            Order newOrder = new Order(3, 3, Date.valueOf("2023-11-29"), new BigDecimal("90.00"));
+            Scanner scanner = new Scanner(System.in);
 
-            // Insert authors and a book
-//            AuthorDataManager.insertAuthor(connection, author1);
-//            AuthorDataManager.insertAuthor(connection, author2);
-//            AuthorDataManager.insertAuthor(connection, author3);
-//            AuthorDataManager.insertAuthor(connection, author4);
-//            bookManager.insertBook(connection, book1);
-//            bookManager.insertBook(connection, book2);
-//            bookManager.insertBook(connection, book3);
+            // Display menu options
+            System.out.println("Select an option:");
+            System.out.println("1. Insert");
+            System.out.println("2. Update");
+            System.out.println("3. Retrieve");
+            System.out.println("4. Delete");
 
-            // Insert a customer
-//            customerManager.insertCustomer(connection, newCustomer);
-//            customerManager.insertCustomer(connection, anotherNewCustomer);
+            // Read user choice
+            int choice = scanner.nextInt();
 
-            // Insert an order and update books in the same transaction
-//            orderManager.insertOrderWithBooksUpdate(connection, newOrder, 4, 5);
+            switch (choice) {
+                case 1:
+                    // Insert
+                    System.out.println("Select what to insert:");
+                    System.out.println("1. Author");
+                    System.out.println("2. Book");
+                    System.out.println("3. Customer");
+                    System.out.println("4. Order");
 
-            // ii) Retrieving all book information, including authors and associated orders
-            bookManager.retrieveAllBooks(connection);
+                    int insertChoice = scanner.nextInt();
 
-            // iii) Updating details of a book
-//            bookManager.updateBook(connection, 2, "Angels And Demons", 2, 10);
+                    switch (insertChoice) {
+                        case 1:
+                            // Insert Author
+                            System.out.println("Enter Author ID:");
+                            int authorID = scanner.nextInt();
+                            scanner.nextLine();  // Consume the newline character
 
-            // iv) Removing an existing book
-//            bookManager.deleteBook(connection, 1);
+                            System.out.println("Enter Author Name:");
+                            String authorName = scanner.nextLine();
+                            Author newAuthor = new Author(authorID, authorName);
+                            authorManager.insertAuthor(connection, newAuthor);
+                            break;
+
+                        case 2:
+                            // Insert Book
+                            System.out.println("Enter Book ID:");
+                            int bookID = scanner.nextInt();
+                            scanner.nextLine();  // Consume the newline character
+                            System.out.println("Enter Book Title:");
+                            String title = scanner.nextLine();
+                            System.out.println("Enter Author ID:");
+                            int authorIDForBook = scanner.nextInt();
+                            System.out.println("Enter Stock Quantity:");
+                            int stockQuantity = scanner.nextInt();
+                            Book newBook = new Book(bookID, title, authorIDForBook, stockQuantity);
+                            bookManager.insertBook(connection, newBook);
+                            break;
+
+                        case 3:
+                            // Insert Customer
+                            System.out.println("Enter Customer ID:");
+                            int customerID = scanner.nextInt();
+                            scanner.nextLine();  // Consume the newline character
+                            System.out.println("Enter Customer Name:");
+                            String customerName = scanner.nextLine();
+                            System.out.println("Enter Customer Email:");
+                            String customerEmail = scanner.nextLine();
+                            Customer newCustomer = new Customer(customerID, customerName, customerEmail);
+                            customerManager.insertCustomer(connection, newCustomer);
+                            break;
+
+                        case 4:
+                            // Insert Order
+                            System.out.println("Enter Order ID:");
+                            int orderID = scanner.nextInt();
+                            System.out.println("Enter Customer ID:");
+                            int customerIDForOrder = scanner.nextInt();
+                            System.out.println("Enter Order Date (YYYY-MM-DD):");
+                            String orderDateString = scanner.next();
+                            Date orderDate = Date.valueOf(orderDateString);
+                            System.out.println("Enter Total Amount:");
+                            BigDecimal totalAmount = scanner.nextBigDecimal();
+                            Order newOrder = new Order(orderID, customerIDForOrder, orderDate, totalAmount);
+                            System.out.println("Enter Book ID for the order:");
+                            int bookIDForOrder = scanner.nextInt();
+                            System.out.println("Enter Quantity for the order:");
+                            int quantityForOrder = scanner.nextInt();
+                            orderManager.insertOrderWithBooksUpdate(connection, newOrder, bookIDForOrder, quantityForOrder);
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice for insert");
+                    }
+                    break;
+
+                case 2:
+                    // Update
+                    System.out.println("Select what to update:");
+                    System.out.println("1. Book");
+
+                    int updateChoice = scanner.nextInt();
+
+                    switch (updateChoice) {
+                        case 1:
+                            // Update Book
+                            System.out.println("Enter Book ID to update:");
+                            int bookIDToUpdate = scanner.nextInt();
+                            scanner.nextLine();  // Consume the newline character
+                            System.out.println("Enter New Title:");
+                            String newTitle = scanner.nextLine();
+                            System.out.println("Enter New Author ID:");
+                            int newAuthorID = scanner.nextInt();
+                            System.out.println("Enter New Stock Quantity:");
+                            int newStockQuantity = scanner.nextInt();
+                            bookManager.updateBook(connection, bookIDToUpdate, newTitle, newAuthorID, newStockQuantity);
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice for update");
+                    }
+                    break;
+
+                case 3:
+                    // Retrieve
+                    bookManager.retrieveAllBooks(connection);
+                    break;
+
+                case 4:
+                    // Delete
+                    System.out.println("Select what to delete:");
+                    System.out.println("1. Book");
+
+                    int deleteChoice = scanner.nextInt();
+
+                    switch (deleteChoice) {
+                        case 1:
+                            // Delete Book
+                            System.out.println("Enter Book ID to delete:");
+                            int bookIDToDelete = scanner.nextInt();
+                            bookManager.deleteBook(connection, bookIDToDelete);
+                            break;
+
+                        default:
+                            System.out.println("Invalid choice for delete");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid choice");
+            }
 
             connection.close();
             System.out.println("Connection closed.");
