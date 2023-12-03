@@ -6,26 +6,35 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDataManager {
 
-    public static void insertOrder(Connection connection, int customerID, int orderID, Date orderDate, BigDecimal totalAmount) throws SQLException {
-        String insertOrderQuery = "INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES (?, ?, ?, ?)";
+    public static void insertOrder(Connection connection, int customerID, Date orderDate, BigDecimal totalAmount) throws SQLException {
+        String insertOrderQuery = "INSERT INTO Orders (CustomerID, OrderDate, TotalAmount) VALUES (?, ?, ?)";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(insertOrderQuery)) {
-            preparedStatement.setInt(1, orderID);
-            preparedStatement.setInt(2, customerID);
-            preparedStatement.setDate(3, orderDate);
-            preparedStatement.setBigDecimal(4, totalAmount);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(insertOrderQuery, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, customerID);
+            preparedStatement.setDate(2, orderDate);
+            preparedStatement.setBigDecimal(3, totalAmount);
 
             int rowsAffected = preparedStatement.executeUpdate();
             System.out.println(rowsAffected + " row(s) inserted into Orders table.");
+
+            // Retrieve the auto-generated Order ID
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int generatedOrderID = generatedKeys.getInt(1);
+                    System.out.println("Generated Order ID: " + generatedOrderID);
+                }
+            }
         } catch (SQLException e) {
             handleSQLException(e);
         }
     }
+
 
     public void insertOrderWithBooksUpdate(Connection connection, Order order, int bookID, int quantity) throws SQLException {
         try {
@@ -33,7 +42,7 @@ public class OrderDataManager {
             connection.setAutoCommit(false);
 
             int customerID = order.getCustomerID();
-            int orderID = order.getOrderID();
+            // No need to specify Order ID here since it's assumed to be auto-incremented
             Date orderDate = order.getOrderDate();
             BigDecimal totalAmount = order.getTotalAmount();
 
@@ -46,8 +55,8 @@ public class OrderDataManager {
 
             // Check if enough books are available
             if (isStockAvailable(connection, bookID, quantity)) {
-                // Insert the order
-                insertOrder(connection, orderID, customerID, orderDate, totalAmount);
+                // Insert the order without specifying Order ID
+                insertOrder(connection, customerID, orderDate, totalAmount);
 
                 // Update the Books table (decrease the stock)
                 BookDataManager.updateBookStock(connection, bookID, quantity);
@@ -69,6 +78,10 @@ public class OrderDataManager {
             connection.setAutoCommit(true);
         }
     }
+
+
+
+
 
 
     // Helper method to check if a customer with the specified CustomerID exists
@@ -108,5 +121,4 @@ public class OrderDataManager {
         System.err.println("Error Code: " + e.getErrorCode());
     }
 
-    // Add other Order related methods here
 }

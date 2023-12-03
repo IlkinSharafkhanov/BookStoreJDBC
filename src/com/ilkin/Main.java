@@ -89,10 +89,14 @@ public class Main {
                             customerManager.insertCustomer(connection, newCustomer);
                             break;
 
+                        // Modified part of Main class
+// ...
                         case 4:
                             // Insert Order
-                            System.out.println("Enter Order ID:");
-                            int orderID = scanner.nextInt();
+                            // Remove the following line that prompts the user for OrderID
+                            // System.out.println("Enter Order ID:");
+
+                            // Create a new Order instance without specifying OrderID
                             System.out.println("Enter Customer ID:");
                             int customerIDForOrder = scanner.nextInt();
                             System.out.println("Enter Order Date (YYYY-MM-DD):");
@@ -100,13 +104,15 @@ public class Main {
                             Date orderDate = Date.valueOf(orderDateString);
                             System.out.println("Enter Total Amount:");
                             BigDecimal totalAmount = scanner.nextBigDecimal();
-                            Order newOrder = new Order(orderID, customerIDForOrder, orderDate, totalAmount);
+                            Order newOrder = new Order(customerIDForOrder, orderDate, totalAmount);
+
                             System.out.println("Enter Book ID for the order:");
                             int bookIDForOrder = scanner.nextInt();
                             System.out.println("Enter Quantity for the order:");
                             int quantityForOrder = scanner.nextInt();
                             orderManager.insertOrderWithBooksUpdate(connection, newOrder, bookIDForOrder, quantityForOrder);
                             break;
+
 
                         default:
                             System.out.println("Invalid choice for insert");

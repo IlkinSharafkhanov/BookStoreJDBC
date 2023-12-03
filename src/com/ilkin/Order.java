@@ -1,17 +1,17 @@
+// Updated Order class
 package com.ilkin;
 
 import java.math.BigDecimal;
 import java.sql.Date;
 
-
 public class Order {
-    private int orderID;
+    private int orderID; // Keep the OrderID field for internal use
     private int customerID;
     private Date orderDate;
     private BigDecimal totalAmount;
 
-    public Order(int orderID, int customerID, Date orderDate, BigDecimal totalAmount) {
-        this.orderID = orderID;
+    public Order(int customerID, Date orderDate, BigDecimal totalAmount) {
+        // No need to provide OrderID during object creation
         this.customerID = customerID;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
@@ -52,6 +52,4 @@ public class Order {
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
-
-    // Add other Order-related methods here
 }

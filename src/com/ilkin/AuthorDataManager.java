@@ -36,8 +36,6 @@ public class AuthorDataManager {
     }
 
 
-    // Other methods remain unchanged...
-
     public static void handleSQLException(SQLException e) {
         System.err.println("SQL Exception: " + e.getMessage());
         System.err.println("SQL State: " + e.getSQLState());

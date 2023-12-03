@@ -1,10 +1,5 @@
 package com.ilkin;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class Customer {
     private int customerID;
     private String customerName;
@@ -43,5 +38,4 @@ public class Customer {
         this.contactInfo = contactInfo;
     }
 
-    // Add other Customer-related methods here
 }
