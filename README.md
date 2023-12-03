@@ -82,6 +82,8 @@ java -cp .:path/to/postgresql.jar com.ilkin.Main
 
 The main components of the code are organized into Java packages. Each package corresponds to a specific entity in the bookstore management system, such as authors, books, customers, and orders.
 
+For detailed info you can watch this video: https://adauniversity-my.sharepoint.com/:v:/g/personal/isharafkhanov15578_ada_edu_az/EVy69aAWk_9KnOc0bcrTQ2gB7-sY_l8bn6ioszkAEVgQbw?e=O2q1lb&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
+
 ## Database Metadata Example
 
 The `MetaDataExample` class provides an example of how to retrieve metadata information from the PostgreSQL database. It displays information about tables, columns, primary keys, and foreign keys.
